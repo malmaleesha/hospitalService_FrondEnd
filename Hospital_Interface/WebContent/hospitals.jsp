@@ -100,8 +100,9 @@
 				</form>
 	
 			<div id = "alertSuccess" class="alert alert-success">
-				<%
-					out.print(session.getAttribute("StatusMag"));
+				<%if(session.getAttribute("StatusMag") != null){
+					 out.print(session.getAttribute("StatusMag"));
+				}
 				%>
 			</div>
 			

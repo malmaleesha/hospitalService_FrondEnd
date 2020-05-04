@@ -80,19 +80,18 @@ public class Hospital {
 				String hospital_Password = rs.getString("hospital_Password");
 
 				// Add into the html table
-				output += "<tr><td> <input hospital_Id=\"hidHospitalIDUpdate\" "
-						+ "hospital_Name=\"hidHospitalIDUpdate\" "				
-						+ " type=\"hidden\" value=\"\" " + hospital_Id + "</td>";
+				output += "<tr><td> <input id=\"hidHospitalIDUpdate\" "
+						+ "name=\"hidHospitalIDUpdate\" "				
+						+ " type=\"hidden\" value=\""  + hospital_Id + "\">" + hospital_Id + "</td>";		
 				
-				
-				output += "<td>" + hospital_Name + "</td>";
-				output += "<td>" + hospital_Address + "</td>";
-				output += "<td>" + hospital_ContactNo + "</td>";
-				output += "<td>" + hospital_Email + "</td>";
-				output += "<td>" + hospital_Details + "</td>";
-				output += "<td>" + hospital_Charge + "</td>";
-				output += "<td>" + hospital_Username + "</td>";
-				output += "<td>" + hospital_Password + "</td>";
+					output += "<td>" + hospital_Name + "</td>";
+					output += "<td>" + hospital_Address + "</td>";
+					output += "<td>" + hospital_ContactNo + "</td>";
+					output += "<td>" + hospital_Email + "</td>";
+					output += "<td>" + hospital_Details + "</td>";
+					output += "<td>" + hospital_Charge + "</td>";
+					output += "<td>" + hospital_Username + "</td>";
+					output += "<td>" + hospital_Password + "</td>";
 
 				// buttons
 				output += "<td><input name=\"btnUpdate\" type=\"button\"value=\"Update\" class=\"btnUpdate btn btn-secondary\"></td>"
