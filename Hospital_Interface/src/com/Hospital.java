@@ -11,10 +11,10 @@ public class Hospital {
 	private Connection connect() {
 		Connection con = null;
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			
 			// Provide the correct details: DBServer/DBName, username, password
-			con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/hospital_test_db", "root", "");
+			con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/hospital_test_db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -80,7 +80,11 @@ public class Hospital {
 				String hospital_Password = rs.getString("hospital_Password");
 
 				// Add into the html table
-				output += "<tr><td>" + hospital_Id + "</td>";
+				output += "<tr><td> <input hospital_Id=\"hidHospitalIDUpdate\" "
+						+ "hospital_Name=\"hidHospitalIDUpdate\" "				
+						+ " type=\"hidden\" value=\"\" " + hospital_Id + "</td>";
+				
+				
 				output += "<td>" + hospital_Name + "</td>";
 				output += "<td>" + hospital_Address + "</td>";
 				output += "<td>" + hospital_ContactNo + "</td>";
@@ -91,10 +95,10 @@ public class Hospital {
 				output += "<td>" + hospital_Password + "</td>";
 
 				// buttons
-				output += "<td><input name=\"btnUpdate\" type=\"button\"value=\"Update\" class=\"btn btn-secondary\"></td>"
-						+ "<td><form method=\"post\" action=\"items.jsp\">"
-						+ "<input name=\"btnRemove\" type=\"submit\" value=\"Remove\"class=\"btn btn-danger\">"	+ "<input name=\"hospital_Id\" type=\"hidden\" value=\"" + hospital_Id + "\">"
-						+ "</form></td></tr>";
+				output += "<td><input name=\"btnUpdate\" type=\"button\"value=\"Update\" class=\"btnUpdate btn btn-secondary\"></td>"
+						+ "<td><form method=\"post\" action=\"hospitals.jsp\">"
+						+ "<input name=\"btnRemove\" type=\"submit\" value=\"Remove\"class=\"btn btn-danger\">"	
+						+ "<input name=\"hidHospitalIDDelete\" type=\"hidden\" value=\"" + hospital_Id + "\">"+ "</form></td></tr>";
 			}
 			con.close();
 			// Complete the html table
