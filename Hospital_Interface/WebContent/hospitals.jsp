@@ -16,8 +16,8 @@
 <body>
 <div class="container">
 	<div class="row">
-		<div class="col-6">	
-			<h1>Hospital Management V10.1</h1>
+		<div class="col-8">	
+			<h1>Hospital Registration From</h1>
 
 				<form id="formHospital" name="formHospital" method="post" action="hospitals.jsp">
 					<!-- Hospital Id:
@@ -36,7 +36,7 @@
 					<input id="hospital_Email" name="hospital_Email" type="text" class="form-control form-control-sm">
 					
 					 <br> Hospital details:
-					<input id="hospital_Details" name="hospital_Details" type="text" class="form-control form-control-sm">
+					<textarea id="hospital_Details" name="hospital_Details" class="form-control form-control-sm"></textarea>
 					
 					<br> Hospital Charge:
 					<input id="hospital_Charge" name="hospital_Charge" type="text" class="form-control form-control-sm">

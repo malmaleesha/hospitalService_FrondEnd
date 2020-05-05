@@ -177,6 +177,7 @@ function validateHospitalForm() {
 	if ($("#hospital_Email").val().trim() == "") {
 		return "Insert Hospital Email.";
 	}
+	
 
 	// Details------------------------
 	if ($("#hospital_Details").val().trim() == "") {

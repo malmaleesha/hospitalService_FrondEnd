@@ -102,7 +102,7 @@ public class HospitalsAPI extends HttpServlet
 			
 			String output = hospitalObj.updateHospital(paras.get("hidHospitalIDSave").toString(),
 									 paras.get("hospital_Name").toString().replace("+", " "),
-									 paras.get("hospital_Address").toString().replace("+", " "),
+									 paras.get("hospital_Address").toString().replace("+", " ").replace("%2C",","),
 									 paras.get("hospital_ContactNo").toString(),
 									 paras.get("hospital_Email").toString().replace("%40", "@"),
 									 paras.get("hospital_Details").toString().replace("+", " "),
