@@ -11,6 +11,7 @@ public class Hospital {
 	private Connection connect() {
 		Connection con = null;
 		try {
+			System.out.print("db connected");
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			
 			// Provide the correct details: DBServer/DBName, username, password
@@ -25,34 +26,43 @@ public class Hospital {
 	{
 		String output = "";
 		try {
-			Connection con = connect();
-			if (con == null) {
-				return "Error while connecting to the database for inserting.";
-			}
-			// create a prepared statement
-			String query = " insert into sign_up(hospital_Id,hospital_Name,hospital_Address,hospital_ContactNo,hospital_Email,hospital_Details,hospital_Charge,hospital_Username,hospital_Password)" + " values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-			PreparedStatement preparedStmt = con.prepareStatement(query);
-			// binding values
-			preparedStmt.setInt(1, 0);
-			preparedStmt.setString(2, hospital_Name);
-			preparedStmt.setString(3, hospital_Address);
-			preparedStmt.setString(4, hospital_ContactNo);
-			preparedStmt.setString(5, hospital_Email);
-			preparedStmt.setString(6, hospital_Details);
-			preparedStmt.setDouble(7, Double.parseDouble(hospital_Charge)); 
-			preparedStmt.setString(8, hospital_Username);
-			preparedStmt.setString(9, hospital_Password);
-
-			// execute the statement
-			preparedStmt.execute();
-			con.close();
-			output = "Inserted successfully";
-		} catch (Exception e) {
-			output = "Error while inserting the hospital.";
-			System.err.println(e.getMessage());
-		}
-		return output;
-	}
+				Connection con = connect();
+				
+				if (con == null) {
+					return "Error while connecting to the database for inserting.";
+				}
+				
+				// create a prepared statement
+				String query = " insert into sign_up(hospital_Id,hospital_Name,hospital_Address,hospital_ContactNo,hospital_Email,hospital_Details,hospital_Charge,hospital_Username,hospital_Password)" + " values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	
+				PreparedStatement preparedStmt = con.prepareStatement(query);
+				
+				// binding values
+				preparedStmt.setInt(1, 0);
+				preparedStmt.setString(2, hospital_Name);
+				preparedStmt.setString(3, hospital_Address);
+				preparedStmt.setString(4, hospital_ContactNo);
+				preparedStmt.setString(5, hospital_Email);
+				preparedStmt.setString(6, hospital_Details);
+				preparedStmt.setDouble(7, Double.parseDouble(hospital_Charge)); 
+				preparedStmt.setString(8, hospital_Username);
+				preparedStmt.setString(9, hospital_Password);
+	
+				// execute the statement
+				preparedStmt.execute();
+				con.close();
+				
+				String newHospitals = readHospitals();
+				 	output = "{\"status\":\"success\", \"data\": \"" +	newHospitals + "\"}";
+			 }
+			 catch (Exception e)
+			 {
+			 		output = "{\"status\":\"error\", \"data\":\"Error while inserting the hospital.\"}";
+			 		System.err.println(e.getMessage());
+			 }
+		
+			 return output;
+		} 
 
 	public String readHospitals() {
 		String output = "";
@@ -63,10 +73,12 @@ public class Hospital {
 			}
 
 			// Prepare the html table to be displayed
-			output = "<table border=\"1\"><tr><th>Hospital Id</th><th>Hospital Name</th><th>Hospital Address</th><th>Hospital ContactNo</th><th>Hospital Email</th><th>Hospital Details</th><th>Hospital Charge</th><th>Hospital Username</th><th>Hospital Password</th><th>Update</th><th>Remove</th></tr>";
+			output = "<table border='1'><tr><th>Hospital Name</th><th>Hospital Address</th><th>Hospital ContactNo</th><th>Hospital Email</th><th>Hospital Details</th><th>Hospital Charge</th><th>Hospital Username</th><th>Hospital Password</th><th>Update</th><th>Remove</th></tr>";
+			
 			String query = "select * from sign_up";
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
+			
 			// iterate through the rows in the result set
 			while (rs.next()) {
 				String hospital_Id = Integer.toString(rs.getInt("hospital_Id"));
@@ -80,11 +92,8 @@ public class Hospital {
 				String hospital_Password = rs.getString("hospital_Password");
 
 				// Add into the html table
-				output += "<tr><td> <input id=\"hidHospitalIDUpdate\" "
-						+ "name=\"hidHospitalIDUpdate\" "				
-						+ " type=\"hidden\" value=\""  + hospital_Id + "\">" + hospital_Id + "</td>";		
-				
-					output += "<td>" + hospital_Name + "</td>";
+				output += "<tr><td> <input id='hidHospitalIDUpdate' name= 'hidHospitalIDUpdate' type='hidden' value='"  + hospital_Id + "'>" + hospital_Name + "</td>";		
+	
 					output += "<td>" + hospital_Address + "</td>";
 					output += "<td>" + hospital_ContactNo + "</td>";
 					output += "<td>" + hospital_Email + "</td>";
@@ -94,18 +103,20 @@ public class Hospital {
 					output += "<td>" + hospital_Password + "</td>";
 
 				// buttons
-				output += "<td><input name=\"btnUpdate\" type=\"button\"value=\"Update\" class=\"btnUpdate btn btn-secondary\"></td>"
-						+ "<td><form method=\"post\" action=\"hospitals.jsp\">"
-						+ "<input name=\"btnRemove\" type=\"submit\" value=\"Remove\"class=\"btn btn-danger\">"	
-						+ "<input name=\"hidHospitalIDDelete\" type=\"hidden\" value=\"" + hospital_Id + "\">"+ "</form></td></tr>";
+				output += "<td><input name='btnUpdate' type='button' value='Update' class='btnUpdate btn btn-secondary'></td>"
+						+"<td><input name= 'btnRemove' type= 'button' value= 'Remove' class= 'btnRemove btn btn-danger' data-hospitalid='" + hospital_Id + "'>" + "</td></tr>";
 			}
 			con.close();
 			// Complete the html table
 			output += "</table>";
-		} catch (Exception e) {
-			output = "Error while reading the Hospital.";
+			
+		} 
+		catch (Exception e) 
+		{
+			output = "Error while reading the Hospitals.";
 			System.err.println(e.getMessage());
 		}
+		
 		return output;
 	}
 
@@ -114,191 +125,118 @@ public class Hospital {
 		String output = "";
 
 		try {
-			Connection con = connect();
-			if (con == null) {
-				return "Error while connecting to the database for updating.";
-			}
-
-			// create a prepared statement
-
-			String query = "UPDATE sign_up SET hospital_Name=? ,hospital_Address=? ,hospital_ContactNo=? ,hospital_Email=? ,hospital_Details=? ,hospital_Charge=? ,hospital_Username=? ,hospital_Password=? WHERE hospital_Id=?";
-			
-			PreparedStatement preparedStmt = con.prepareStatement(query);
-
-			// binding values
-			preparedStmt.setString(1, hospital_Name);
-			preparedStmt.setString(2, hospital_Address);
-			preparedStmt.setString(3, hospital_ContactNo);
-			preparedStmt.setString(4, hospital_Email);
-			preparedStmt.setString(5, hospital_Details);
-			preparedStmt.setDouble(6, Double.parseDouble(hospital_Charge));
-			preparedStmt.setString(7, hospital_Username);
-			preparedStmt.setString(8, hospital_Password);
-			preparedStmt.setInt(9, Integer.parseInt(hospital_Id));
-
-			// execute the statement
-			preparedStmt.execute();
-			con.close();
-			output = "Updated successfully";
-		}
-
-		catch (Exception e) {
-			output = "Error while updating the hospital.";
-			System.err.println(e.getMessage( ));
-		}
-
-		return output;
-	}
+				Connection con = connect();
+				
+				if (con == null)
+				{
+					return "Error while connecting to the database for updating.";
+				}
+	
+				// create a prepared statement
+	
+				String query = "UPDATE sign_up SET hospital_Name=? ,hospital_Address=? ,hospital_ContactNo=? ,hospital_Email=? ,hospital_Details=? ,hospital_Charge=? ,hospital_Username=? ,hospital_Password=? WHERE hospital_Id=?";
+				
+				PreparedStatement preparedStmt = con.prepareStatement(query);
+	
+				// binding values
+				preparedStmt.setString(1, hospital_Name);
+				preparedStmt.setString(2, hospital_Address);
+				preparedStmt.setString(3, hospital_ContactNo);
+				preparedStmt.setString(4, hospital_Email);
+				preparedStmt.setString(5, hospital_Details);
+				preparedStmt.setDouble(6, Double.parseDouble(hospital_Charge));
+				preparedStmt.setString(7, hospital_Username);
+				preparedStmt.setString(8, hospital_Password);
+				preparedStmt.setInt(9, Integer.parseInt(hospital_Id));
+	
+				// execute the statement
+				preparedStmt.execute();
+				con.close();
+				
+				String newHospitals = readHospitals();
+					output = "{\"status\":\"success\", \"data\": \"" +
+									newHospitals + "\"}";
+				 }
+				 catch (Exception e)
+				 {
+						 output = "{\"status\":\"error\", \"data\":\"Error while updating the Hospital.\"}";
+						 System.err.println(e.getMessage());
+				 }
+				 return output;
+		} 
 
 	public String deleteHospital(String hospital_Id) {
 		String output = "";
 		try {
-			Connection con = connect();
-			if (con == null) {
-				return "Error while connecting to the database for deleting.";
-			}
-			// create a prepared statement
-			String query = "delete from sign_up where hospital_Id=?";
-			PreparedStatement preparedStmt = con.prepareStatement(query);
-			// binding values
-			preparedStmt.setInt(1, Integer.parseInt(hospital_Id));
-			// execute the statement
-			preparedStmt.execute();
-			con.close();
-			output = "Deleted successfully";
-		} catch (Exception e) {
-			output = "Error while deleting the hospital.";
-			System.err.println(e.getMessage());
-		}
-		return output;
-
-	}
-
-	
-	
-	
-	
-	
-	
-	//User login check
-	public User readLogin(String hospital_Username, String hospital_Password) {
-		try{
-			Connection con = connect();
-			
-			if (con == null){
-				System.out.println("bl");
-				System.out.println("execured up before");
-				return null;
-			}
-		
-//			System.out.println("execured up after");
-
-		// create a prepared statement
-			String query = "select * from sign_up where hospital_Username = '"+hospital_Username+"'";
-			
-			PreparedStatement preparedStmt = con.prepareStatement(query);
-			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
-
-
-			while (rs.next()){
+				Connection con = connect();
 				
-				System.out.println(rs.getString("hospital_Id"));
-				
-				User u = new User(rs.getString("hospital_Id"), rs.getString("hospital_Name"), rs.getString("hospital_Username"), "hospital");
-	
-				String password = rs.getString("hospital_Password");
-	
-				if(password.equals(hospital_Password)){
-					System.out.println("true from db");
-					return u;
-				}else{
-					System.out.println("false from db");
+				if (con == null) 
+				{
+					return "Error while connecting to the database for deleting.";
 				}
+				
+				// create a prepared statement
+				String query = "delete from sign_up where hospital_Id=?";
+				
+				PreparedStatement preparedStmt = con.prepareStatement(query);
+				
+				// binding values
+				preparedStmt.setInt(1, Integer.parseInt(hospital_Id));
+				
+				// execute the statement
+				preparedStmt.execute();
+				con.close();
+				
+				String newHospitals = readHospitals();
+				 		output = "{\"status\":\"success\", \"data\": \"" +
+				 					newHospitals + "\"}";
 			}
-			
-			con.close();
+			catch (Exception e)
+			{
+				 output = "{\"status\":\"error\", \"data\":\"Error while deleting the hospital.\"}";
+				 System.err.println(e.getMessage());
+			}
+				 return output;
+		} 
 
-		}catch (Exception e){
-				System.err.println(e.getMessage());
-		}
-		
-		return null;
-			
-	}
 	
 	
-	public User readAdminlogin(String Admin_username, String Admin_password) {
-		try{
-			Connection con = connect();
-			
-			if (con == null){
-				System.out.println("Executed before Comparision");
-				return null;
-			}
-		
-
-
-		// create a prepared statement
-			String query = "select * from admin_details where Admin_username = '"+Admin_username+"'";
-			PreparedStatement preparedStmt = con.prepareStatement(query);
-			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
-
-
-			while (rs.next()){
-				
-				System.out.println(rs.getString("Admin_id"));
-				
-				User u = new User(rs.getString("Admin_id"), rs.getString("Admin_name"), rs.getString("Admin_username"), "Admin");
-				
-				String password = rs.getString("Admin_password");
-
-				if(password.equals(Admin_password)){
-					System.out.println("true from db");
-					return u;
-				}else{
-					System.out.println("false from db");
-				}
-			}
-			
-			con.close();
-
-		}catch (Exception e){
-				System.err.println(e.getMessage());
-		}
-		
-		return null;
-			
-	}
 	
-//	//Admin login check
-//	public boolean readAdminLogin(String Admin_username, String Admin_password) {
+	
+	
+	
+//	//User login check
+//	public User readLogin(String hospital_Username, String hospital_Password) {
 //		try{
 //			Connection con = connect();
 //			
 //			if (con == null){
 //				System.out.println("bl");
 //				System.out.println("execured up before");
-//				return false;
+//				return null;
 //			}
 //		
 ////			System.out.println("execured up after");
 //
 //		// create a prepared statement
-//			String query = "select Admin_password from admin_details where Admin_username = '"+Admin_username+"'";
+//			String query = "select * from sign_up where hospital_Username = '"+hospital_Username+"'";
+//			
 //			PreparedStatement preparedStmt = con.prepareStatement(query);
 //			Statement stmt = con.createStatement();
 //			ResultSet rs = stmt.executeQuery(query);
 //
 //
 //			while (rs.next()){
+//				
+//				System.out.println(rs.getString("hospital_Id"));
+//				
+//				User u = new User(rs.getString("hospital_Id"), rs.getString("hospital_Name"), rs.getString("hospital_Username"), "hospital");
 //	
-//				String password = rs.getString("Admin_password");
+//				String password = rs.getString("hospital_Password");
 //	
-//				if(password.equals(Admin_password)){
+//				if(password.equals(hospital_Password)){
 //					System.out.println("true from db");
-//					return true;
+//					return u;
 //				}else{
 //					System.out.println("false from db");
 //				}
@@ -310,9 +248,96 @@ public class Hospital {
 //				System.err.println(e.getMessage());
 //		}
 //		
-//		return false;
+//		return null;
 //			
 //	}
+//	
+//	
+//	public User readAdminlogin(String Admin_username, String Admin_password) {
+//		try{
+//			Connection con = connect();
+//			
+//			if (con == null){
+//				System.out.println("Executed before Comparision");
+//				return null;
+//			}
+//		
+//
+//
+//		// create a prepared statement
+//			String query = "select * from admin_details where Admin_username = '"+Admin_username+"'";
+//			PreparedStatement preparedStmt = con.prepareStatement(query);
+//			Statement stmt = con.createStatement();
+//			ResultSet rs = stmt.executeQuery(query);
+//
+//
+//			while (rs.next()){
+//				
+//				System.out.println(rs.getString("Admin_id"));
+//				
+//				User u = new User(rs.getString("Admin_id"), rs.getString("Admin_name"), rs.getString("Admin_username"), "Admin");
+//				
+//				String password = rs.getString("Admin_password");
+//
+//				if(password.equals(Admin_password)){
+//					System.out.println("true from db");
+//					return u;
+//				}else{
+//					System.out.println("false from db");
+//				}
+//			}
+//			
+//			con.close();
+//
+//		}catch (Exception e){
+//				System.err.println(e.getMessage());
+//		}
+//		
+//		return null;
+//			
+//	}
+//	
+////	//Admin login check
+////	public boolean readAdminLogin(String Admin_username, String Admin_password) {
+////		try{
+////			Connection con = connect();
+////			
+////			if (con == null){
+////				System.out.println("bl");
+////				System.out.println("execured up before");
+////				return false;
+////			}
+////		
+//////			System.out.println("execured up after");
+////
+////		// create a prepared statement
+////			String query = "select Admin_password from admin_details where Admin_username = '"+Admin_username+"'";
+////			PreparedStatement preparedStmt = con.prepareStatement(query);
+////			Statement stmt = con.createStatement();
+////			ResultSet rs = stmt.executeQuery(query);
+////
+////
+////			while (rs.next()){
+////	
+////				String password = rs.getString("Admin_password");
+////	
+////				if(password.equals(Admin_password)){
+////					System.out.println("true from db");
+////					return true;
+////				}else{
+////					System.out.println("false from db");
+////				}
+////			}
+////			
+////			con.close();
+////
+////		}catch (Exception e){
+////				System.err.println(e.getMessage());
+////		}
+////		
+////		return false;
+////			
+////	}
 }
 
 

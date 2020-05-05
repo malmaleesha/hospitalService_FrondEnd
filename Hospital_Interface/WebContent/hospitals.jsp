@@ -3,73 +3,26 @@
     pageEncoding="ISO-8859-1"%>
 
 
-<%
-
-	//Initialize--------------------------------------
-	session.setAttribute("statusMsg", "");
-	System.out.println("Trying to process....");
-	
-	//Save---------------------------------
-		if (request.getParameter("hospital_Id") != null)
-		{
-			 Hospital hospitalObj = new Hospital();
-			 String stsMsg = "";
-	//Insert--------------------------
-		if (request.getParameter("hidHospitalIDSave") == "")
-		 {
-		 stsMsg = hospitalObj.insertHospital(
-		 request.getParameter("hospital_Name"),
-		 request.getParameter("hospital_Address"),
-		 request.getParameter("hospital_ContactNo"),
-		 request.getParameter("hospital_Email"),
-		 request.getParameter("hospital_Details"),
-		 request.getParameter("hospital_Charge"),
-		 request.getParameter("hospital_Username"),
-		 request.getParameter("hospital_Password"));
-	 	}
-		else
-	//Update----------------------
-		 {
-		 stsMsg = hospitalObj.updateHospital(request.getParameter("hidHospitalIDSave"),
-		 request.getParameter("hospital_Name"),
-		 request.getParameter("hospital_Address"),
-		 request.getParameter("hospital_ContactNo"),
-		 request.getParameter("hospital_Email"),
-		 request.getParameter("hospital_Details"),
-		 request.getParameter("hospital_Charge"),
-		 request.getParameter("hospital_Username"),
-		 request.getParameter("hospital_Password"));
-		 }
-	 session.setAttribute("statusMsg", stsMsg);
-	}
-	//Delete-----------------------------
-		if (request.getParameter("hidHospitalIDDelete") != null)
-		{
-		 Hospital hospitalObj = new Hospital();
-		 String stsMsg =
-		 hospitalObj.deleteHospital(request.getParameter("hidHospitalIDDelete"));
-		 session.setAttribute("statusMsg", stsMsg);
-		}
-%>
-
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<title>Hospital Management</title>
 <link rel="stylesheet" href="Views/bootstrap.min.css">
 <script src="Components/jquery-3.2.1.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <script src="Components/hospitals.js"></script>
 </head>
 <body>
-<div class = "row">
-	<div class="col-6">
-			<h1>Hospital Management V9</h1>
+<div class="container">
+	<div class="row">
+		<div class="col-6">	
+			<h1>Hospital Management V10.1</h1>
 
 				<form id="formHospital" name="formHospital" method="post" action="hospitals.jsp">
-					 Hospital Id:
-					<input id="hospital_Id" name="hospital_Id" type="text"
-					 class="form-control form-control-sm">
+					<!-- Hospital Id:
+					<input id="hospital_Id" name="hospital_Id" type="text" class="form-control form-control-sm"-->
+					
 					<br> Hospital name:
 					<input id="hospital_Name" name="hospital_Name" type="text" class="form-control form-control-sm">
 					
@@ -99,22 +52,20 @@
 					<input type="hidden" id="hidHospitalIDSave" name="hidHospitalIDSave" value="">
 				</form>
 	
-			<div id = "alertSuccess" class="alert alert-success">
-				<%if(session.getAttribute("StatusMag") != null){
-					 out.print(session.getAttribute("StatusMag"));
-				}
-				%>
-			</div>
+			<div id = "alertSuccess" class="alert alert-success"></div>
 			
 			<div id="alertError" class="alert alert-danger"></div>
 			
 			<br>
+			<div id="divHospitalsGrid">
 			
 			<%
 				Hospital hospitalObj = new Hospital();
 				out.print(hospitalObj.readHospitals());
 			%>
-		</div>	
+			</div>
+		</div>
+	</div>	
 </div>
 
 </body>
