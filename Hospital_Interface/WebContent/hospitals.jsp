@@ -16,7 +16,7 @@
 <body>
 <div class="container">
 	<div class="row">
-		<div class="col-8">	
+		<div class="col-12">	
 			<h1>Hospital Registration From</h1>
 
 				<form id="formHospital" name="formHospital" method="post" action="hospitals.jsp">
@@ -45,7 +45,7 @@
 					<input id="hospital_Username" name="hospital_Username" type="text" class="form-control form-control-sm">
 					
 					<br> Hospital Password:
-					<input id="hospital_Password" name="hospital_Password" type="text" class="form-control form-control-sm">
+					<input id="hospital_Password" name="hospital_Password" type="password" class="form-control form-control-sm">
 					
 					<br>
 					<input id="btnSave" name="btnSave" type="button" value="Save" class="btn btn-primary">

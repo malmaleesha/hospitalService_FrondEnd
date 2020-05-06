@@ -165,6 +165,13 @@ function validateHospitalForm() {
 	if ($("#hospital_ContactNo").val().trim() == "") {
 		return "Insert Hospital Contact no.";
 	}
+	
+	var contactNochar =/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+	var contact = $("#hospital_ContactNo").val().trim();
+	if (contactNochar.test(contact) == false) {
+		return "Should enter valid Contact No";
+	}
+	console.log(contactNochar.test(contact));
 
 	// // Contact no validation
 	// var tmpContactNo =$("#hospital_ContactNo").val().trim();
@@ -177,8 +184,14 @@ function validateHospitalForm() {
 	if ($("#hospital_Email").val().trim() == "") {
 		return "Insert Hospital Email.";
 	}
+	//valid email characters
+	var emailchar = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	var email = $("#hospital_Email").val().trim();
+	if (emailchar.test(email) == false) {
+		return "Should enter valid Email Address";
+	}
+	console.log(emailchar.test(email));
 	
-
 	// Details------------------------
 	if ($("#hospital_Details").val().trim() == "") {
 		return "Insert Hospital Details.";
@@ -202,11 +215,25 @@ function validateHospitalForm() {
 	if ($("#hospital_Username").val().trim() == "") {
 		return "Insert Hospital Username.";
 	}
+//	//User validation
+//	var usernamechar =/^[a-zA-Z0-9]+$/;
+//	var username = $("#hospital_Username").val().trim();
+//	if (usernamechar.test(username) == false) {
+//		return "Should enter valid Username with capital letters A to Z and the numbers 0 to 9.";
+//	}
+//	console.log(usernamechar.test(username));
 
 	// Password------------------------
 	if ($("#hospital_Password").val().trim() == "") {
 		return "Insert Hospital Password.";
 	}
+//	//Password validation
+//	var passwordchar =/^[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+//	var password = $("#hospital_Password").val().trim();
+//	if (passwordchar.test(password) == false) {
+//		return "Should enter valid password";
+//	}
+//	console.log(passwordchar.test(password));
 
 	return true;
 }

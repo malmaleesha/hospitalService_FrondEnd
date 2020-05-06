@@ -105,10 +105,10 @@ public class HospitalsAPI extends HttpServlet
 									 paras.get("hospital_Address").toString().replace("+", " ").replace("%2C",","),
 									 paras.get("hospital_ContactNo").toString(),
 									 paras.get("hospital_Email").toString().replace("%40", "@"),
-									 paras.get("hospital_Details").toString().replace("+", " "),
+									 paras.get("hospital_Details").toString().replace("+", " ").replace("%2C",",").replace("%0D%0A"," ").replace("%25", "%"),
 									 paras.get("hospital_Charge").toString(),
 									 paras.get("hospital_Username").toString().replace("+", " "),
-									 paras.get("hospital_Password").toString());
+									 paras.get("hospital_Password").toString().replace("%40","@").replace("%24","$"));
 					
 			response.getWriter().write(output); 
 	}
